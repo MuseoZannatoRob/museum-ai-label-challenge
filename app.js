@@ -6,7 +6,15 @@ function sh(a){return [...a].sort(()=>Math.random()-0.5)}
 function start(){r(`<div class=card><h1>Museum AI Label Challenge</h1><select id=l><option value=en>English</option><option value=it>Italiano</option></select><button onclick='welcome()'>Continue</button></div>`)}
 function welcome(){st.lang=document.getElementById('l').value;r(`<div class=card><img class='hero' src='MuseumVsAi1.jpg'><h2>${TEXT[st.lang].welcome}</h2><button onclick='profile()'>${TEXT[st.lang].cont}</button></div>`)}
 function profile(){r(`<div class=card><h2>${TEXT[st.lang].profile}</h2><label>Age</label><select id=age><option><18</option><option>18-30</option><option>31-50</option><option>51-65</option><option>>65</option></select><br><label>Language</label><select id=nl><option>Italian</option><option>English</option><option>French</option><option>Spanish</option><option>German</option><option>Other</option></select><br><label>Expertise</label><select id=ex><option>None</option><option>Amateur naturalist</option><option>Entomologist</option><option>Museum curator</option></select><br><button onclick='tutorial()'>${TEXT[st.lang].cont}</button></div>`)}
-function tutorial(){st.lang=document.getElementById('l').value;r(`<div class=card><img style="max-width:100%" src="images/Tutorial_${st.lang.toUpperCase()}.jpg"><br><button onclick='begin()'>Continue</button></div>`)}
+function tutorial(){
+    r(`
+    <div class="card">
+        <img style="max-width:100%" src="images/Tutorial_${st.lang.toUpperCase()}.jpg">
+        <br>
+        <button onclick="begin()">Continue</button>
+    </div>
+    `);
+}
 function begin(){st.tasks=sh(BENCHMARK).slice(0,3).flatMap(s=>s.tasks.map(t=>({...t,image:s.image,stack_id:s.stack_id})));st.i=0;next()}
 function norm(s){return (s||'').toLowerCase().trim().replace(/\s+/g,' ')}
 function lev(a,b){let m=Array(b.length+1).fill().map(()=>Array(a.length+1).fill(0));for(let i=0;i<=b.length;i++)m[i][0]=i;for(let j=0;j<=a.length;j++)m[0][j]=j;for(let i=1;i<=b.length;i++)for(let j=1;j<=a.length;j++)m[i][j]=b[i-1]==a[j-1]?m[i-1][j-1]:1+Math.min(m[i-1][j],m[i][j-1],m[i-1][j-1]);return m[b.length][a.length]}
