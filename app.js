@@ -6,7 +6,7 @@ document.getElementById('app').innerHTML=
 h+
 `<div class="footer">
 Museum AI Label Challenge · RC5<br>
-Museo di Archeologia e Scienze Naturali "G. Zannato" - Museo Regionale di Scienze Naturali di Torino
+Museo Civico "G. Zannato"
 </div>`;
 }
 function sh(a){return [...a].sort(()=>Math.random()-0.5)}
@@ -52,7 +52,19 @@ function next(){if(st.i>=st.tasks.length)return res();let t=st.tasks[st.i];st.t=
 function save(){
   let t=st.tasks[st.i],a=document.getElementById('a').value;
   let uta=utaScore(a,t);
-  st.ans.push({stack_id:t.stack_id||'',task_type:t.type,answer:a,expected:t.expected,uta:uta,acc:uta,time:(Date.now()-st.t)/1000});
+  let taskIndex=st.i+1;
+  st.ans.push({
+    stack_id:t.stack_id||'',
+    task_type:t.type,
+    task_index:taskIndex,
+    benchmark_version:'RC5',
+    scoring_version:'UTA_v1',
+    answer:a,
+    expected:t.expected,
+    uta:uta,
+    acc:uta,
+    time:(Date.now()-st.t)/1000
+  });
   st.i++;
   next();
 }
@@ -83,10 +95,13 @@ for(const row of st.ans){
       expertise:st.expertise,
       stack_id:(row?.stack_id || ""),
       task_type:(row?.task_type || ""),
+      task_index:Number(row?.task_index || 0),
+      benchmark_version:(row?.benchmark_version || "RC5"),
+      scoring_version:(row?.scoring_version || "UTA_v1"),
       answer:(row?.answer || ""),
       expected:(row?.expected || ""),
       accuracy:Number(row?.uta || 0),
-       uta:Number(row?.uta || 0),
+      uta:Number(row?.uta || 0),
       time_seconds:Number(row?.time || 0),
       completion_status:'completed'
     })
