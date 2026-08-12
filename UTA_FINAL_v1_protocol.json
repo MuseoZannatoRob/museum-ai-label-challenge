@@ -1,0 +1,21 @@
+{
+  "version": "UTA Final v1",
+  "scale": {
+    "100": "correct after formal normalization",
+    "90": "semantically correct but documentary form/non-optimal extra differs",
+    "75": "substantially correct but incomplete",
+    "50": "partially correct",
+    "25": "target/entity identified but reading/transcription error",
+    "0": "wrong/contradictory/not identified"
+  },
+  "normalization": [
+    "case",
+    "diacritics",
+    "punctuation",
+    "spacing",
+    "equivalent separators"
+  ],
+  "scoring": "deterministic; no AI judge",
+  "task_specific_rules": "encoded explicitly in BENCHMARK entries as uta_accepted, uta_extra, uta_partial",
+  "note": "No semantic equivalence is inferred automatically from string similarity."
+}

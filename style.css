@@ -1,4 +1,11 @@
-body{font-family:Arial;margin:0;padding:20px;background:#f4f4f4} .card{background:#fff;padding:20px;border-radius:8px;max-width:1200px;margin:auto}.layout{display:flex;gap:20px}.img img{max-width:100%;max-height:70vh}.bar{height:10px;background:#ddd}.fill{height:10px;background:#4caf50}
-body{background:#f4f1e8;font-family:Arial,sans-serif}
-.card{background:white;padding:20px;border-radius:10px;max-width:1100px;margin:20px auto}
-.hero{width:100%;border-radius:8px}
+body{font-family:Arial,sans-serif;margin:0;background:#f4f4f4}
+#app{max-width:1200px;margin:auto;padding:20px}
+.card{background:#fff;padding:20px;border-radius:10px}
+.progress{height:12px;background:#ddd;border-radius:20px;overflow:hidden}
+.bar{height:100%;background:#2c7}
+.layout{display:flex;gap:20px}
+.imgwrap{flex:1;overflow:hidden;border:1px solid #ccc}
+.panel{flex:1}
+input,select,button{width:100%;padding:10px;margin:8px 0}
+img{max-width:100%}
+@media(max-width:800px){.layout{flex-direction:column}}
