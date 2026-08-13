@@ -83,7 +83,7 @@ for(const row of st.ans){
 
   if(!row) continue;
 
-  fetch(GOOGLE_SCRIPT_URL,{
+  await fetch(GOOGLE_SCRIPT_URL,{
     method:'POST',
     mode:'no-cors',
     body:JSON.stringify({
