@@ -5,8 +5,8 @@ function r(h){
 document.getElementById('app').innerHTML=
 h+
 `<div class="footer">
-Museum AI Label Challenge · RC5<br>
-Museo Civico "G. Zannato"
+Museum AI Label Challenge V 5.0 · a citizen-science project by:<br>
+Museo di Archeologia e Scienze Naturali "G. Zannato" & Museo Regionale di Scienze Naturali di Torino
 </div>`;
 }
 function sh(a){return [...a].sort(()=>Math.random()-0.5)}
