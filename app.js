@@ -77,37 +77,39 @@ let F=.7*A+.3*S;
 
 let participantId=localStorage.participant_id||(localStorage.participant_id='P-'+Math.random().toString(36).slice(2,10));
 let sessionId=st.session_id;
+let saved=0;
 
-const rows=st.ans.map(row=>({
-  participant_id:participantId,
-  session_id:sessionId,
-  language_ui:st.lang,
-  native_language:st.native_language,
-  age_class:st.age_class,
-  expertise:st.expertise,
-  stack_id:(row?.stack_id || ""),
-  task_type:(row?.task_type || ""),
-  task_index:Number(row?.task_index || 0),
-  benchmark_version:(row?.benchmark_version || "RC5"),
-  scoring_version:(row?.scoring_version || "UTA_v1"),
-  answer:(row?.answer || ""),
-  expected:(row?.expected || ""),
-  accuracy:Number(row?.uta || 0),
-  uta:Number(row?.uta || 0),
-  time_seconds:Number(row?.time || 0),
-  completion_status:'completed'
-}));
+for(const row of st.ans){
 
-try{
-  await fetch(GOOGLE_SCRIPT_URL,{
+  if(!row) continue;
+
+  fetch(GOOGLE_SCRIPT_URL,{
     method:'POST',
     mode:'no-cors',
-    body:JSON.stringify({rows:rows})
-  });
-}catch(err){
-  console.error(err);
-}
+    body:JSON.stringify({
+      participant_id:participantId,
+      session_id:sessionId,
+      language_ui:st.lang,
+      native_language:st.native_language,
+      age_class:st.age_class,
+      expertise:st.expertise,
+      stack_id:(row?.stack_id || ""),
+      task_type:(row?.task_type || ""),
+      task_index:Number(row?.task_index || 0),
+      benchmark_version:(row?.benchmark_version || "RC5"),
+      scoring_version:(row?.scoring_version || "UTA_v1"),
+      answer:(row?.answer || ""),
+      expected:(row?.expected || ""),
+      accuracy:Number(row?.uta || 0),
+      uta:Number(row?.uta || 0),
+      time_seconds:Number(row?.time || 0),
+      completion_status:'completed'
+    })
+  }).catch(console.error);
 
+  saved++;
+}
+saved = st.ans.length;
 const AI_UTA=72.45;
 const AI_TIME=3.67;
 const AI_SPEED=Math.min(100,100*(30/AI_TIME));
@@ -124,20 +126,43 @@ const note=TEXT[st.lang].score_note;
 
 r(`<div class=card>
 <h2>${TEXT[st.lang].results}</h2>
+
 <table style="width:100%;border-collapse:collapse;margin:22px 0;text-align:center">
-<thead><tr>
+<thead>
+<tr>
 <th style="padding:12px;text-align:left">Metric</th>
 <th style="padding:12px">${humanTitle}</th>
 <th style="padding:12px">${aiTitle}</th>
-</tr></thead>
+</tr>
+</thead>
 <tbody>
-<tr><td style="padding:11px;text-align:left">${metric}</td><td style="padding:11px">${A.toFixed(1)}</td><td style="padding:11px">${AI_UTA.toFixed(1)}</td></tr>
-<tr><td style="padding:11px;text-align:left">${avgtime}</td><td style="padding:11px">${T.toFixed(1)} s</td><td style="padding:11px">${AI_TIME.toFixed(1)} s</td></tr>
-<tr><td style="padding:11px;text-align:left">${speed}</td><td style="padding:11px">${S.toFixed(1)}</td><td style="padding:11px">${AI_SPEED.toFixed(1)}</td></tr>
-<tr><td style="padding:11px;text-align:left;font-weight:700">${final}</td><td style="padding:11px;font-weight:700">${F.toFixed(1)}</td><td style="padding:11px;font-weight:700">${AI_FINAL.toFixed(1)}</td></tr>
-</tbody></table>
+<tr>
+<td style="padding:11px;text-align:left">${metric}</td>
+<td style="padding:11px">${A.toFixed(1)}</td>
+<td style="padding:11px">${AI_UTA.toFixed(1)}</td>
+</tr>
+<tr>
+<td style="padding:11px;text-align:left">${avgtime}</td>
+<td style="padding:11px">${T.toFixed(1)} s</td>
+<td style="padding:11px">${AI_TIME.toFixed(1)} s</td>
+</tr>
+<tr>
+<td style="padding:11px;text-align:left">${speed}</td>
+<td style="padding:11px">${S.toFixed(1)}</td>
+<td style="padding:11px">${AI_SPEED.toFixed(1)}</td>
+</tr>
+<tr>
+<td style="padding:11px;text-align:left;font-weight:700">${final}</td>
+<td style="padding:11px;font-weight:700">${F.toFixed(1)}</td>
+<td style="padding:11px;font-weight:700">${AI_FINAL.toFixed(1)}</td>
+</tr>
+</tbody>
+</table>
+
 <p style="font-size:.88em;line-height:1.5;text-align:left;margin-top:8px">${note}</p>
+
 <hr style="margin:20px 0">
+
 <h3>${TEXT[st.lang].thanks}</h3>
 <p>${TEXT[st.lang].saved_ok}</p>
 </div>`)
