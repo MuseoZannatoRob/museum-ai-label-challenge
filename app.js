@@ -10,7 +10,16 @@ Museo di Archeologia e Scienze Naturali "G. Zannato" & Museo Regionale di Scienz
 </div>`;
 }
 function sh(a){return [...a].sort(()=>Math.random()-0.5)}
-function start(){r(`<div class=card><h1>Museum AI Label Challenge</h1><select id=l><option value=en>English</option><option value=it>Italiano</option></select><button onclick='welcome()'>Continue</button></div>`)}
+function start(){r(`<div class="card start-screen">
+  <img class="start-hero" src="images/MuseumVsAi1.jpg" alt="Museum AI Label Challenge">
+  <h1>Museum AI Label Challenge</h1>
+  <select id="l" class="start-language"><option value="en">English</option><option value="it">Italiano</option></select>
+  <button class="start-button" onclick="welcome()">Continue</button>
+  <div class="start-logos" aria-label="Participating museums">
+    <img class="start-logo" src="images/logoMCZ.png" alt="Museo di Archeologia e Scienze Naturali G. Zannato">
+    <img class="start-logo" src="images/logoMRSN.png" alt="Museo Regionale di Scienze Naturali di Torino">
+  </div>
+</div>`)}
 function welcome(){st.lang=document.getElementById('l').value;r(`<div class=card><img class='hero' src='images/MuseumVsAi1.jpg'><p style="line-height:1.7;margin:24px 0;text-align:justify">
 ${TEXT[st.lang].intro}
 </p>
@@ -83,37 +92,33 @@ for(const row of st.ans){
 
   if(!row) continue;
 
-  try {
-    await fetch(GOOGLE_SCRIPT_URL,{
-      method:'POST',
-      mode:'no-cors',
-      body:JSON.stringify({
-        participant_id:participantId,
-        session_id:sessionId,
-        language_ui:st.lang,
-        native_language:st.native_language,
-        age_class:st.age_class,
-        expertise:st.expertise,
-        stack_id:(row?.stack_id || ""),
-        task_type:(row?.task_type || ""),
-        task_index:Number(row?.task_index || 0),
-        benchmark_version:(row?.benchmark_version || "RC5"),
-        scoring_version:(row?.scoring_version || "UTA_v1"),
-        answer:(row?.answer || ""),
-        expected:(row?.expected || ""),
-        accuracy:Number(row?.uta || 0),
-        uta:Number(row?.uta || 0),
-        time_seconds:Number(row?.time || 0),
-        completion_status:'completed'
-      })
-    });
-    saved++;
-    // Give the Apps Script endpoint a short hand-off window before the next request.
-    await new Promise(resolve => setTimeout(resolve,150));
-  } catch(e) {
-    console.error('Google Sheets submission failed:', e);
-  }
+  fetch(GOOGLE_SCRIPT_URL,{
+    method:'POST',
+    mode:'no-cors',
+    body:JSON.stringify({
+      participant_id:participantId,
+      session_id:sessionId,
+      language_ui:st.lang,
+      native_language:st.native_language,
+      age_class:st.age_class,
+      expertise:st.expertise,
+      stack_id:(row?.stack_id || ""),
+      task_type:(row?.task_type || ""),
+      task_index:Number(row?.task_index || 0),
+      benchmark_version:(row?.benchmark_version || "RC5"),
+      scoring_version:(row?.scoring_version || "UTA_v1"),
+      answer:(row?.answer || ""),
+      expected:(row?.expected || ""),
+      accuracy:Number(row?.uta || 0),
+      uta:Number(row?.uta || 0),
+      time_seconds:Number(row?.time || 0),
+      completion_status:'completed'
+    })
+  }).catch(console.error);
+
+  saved++;
 }
+saved = st.ans.length;
 const AI_UTA=72.45;
 const AI_TIME=3.67;
 const AI_SPEED=Math.min(100,100*(30/AI_TIME));
